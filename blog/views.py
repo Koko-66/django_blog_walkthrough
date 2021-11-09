@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, reverse
 from django.views import generic, View
 from django.http import HttpResponseRedirect
@@ -21,6 +22,7 @@ class PostDetail(View):
         liked = False
         if post.likes.filter(id=self.request.user.id).exists():
             liked = True
+        
 
         return render(
             request,
@@ -50,6 +52,7 @@ class PostDetail(View):
             comment = comment_form.save(commit=False)
             comment.post = post
             comment.save()
+            messages.success(request, 'Commend added.')
         else: 
             comment_form = CommentForm()
 
@@ -61,7 +64,7 @@ class PostDetail(View):
                 'comments': comments,
                 'commented': True,
                 'liked': liked,
-                'comment_form': CommentForm()
+                'comment_form': CommentForm(),
             },
         )
     
